@@ -79,7 +79,16 @@ namespace SngLib
                 Vector<byte> dataVector = new Vector<byte>(data.Slice(byteIndex));
 
                 Vector<byte> maskedData = dataVector ^ dataIndexVectors![lookupIndex & lookupSizeMask];
+#if NET5_0_OR_GREATER
                 maskedData.CopyTo(data.Slice(byteIndex));
+#else
+                var destination = data.Slice(byteIndex);
+                if (destination.Length < Vector<byte>.Count)
+                {
+                    throw new ArgumentException("Destination is too short");
+                }
+                Unsafe.WriteUnaligned(ref MemoryMarshal.GetReference(data.Slice(byteIndex)), maskedData);
+#endif
             }
 
             long endOfVecFilePos = filePos + totalVecElements;
