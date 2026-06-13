@@ -1,6 +1,6 @@
 ﻿#nullable enable
 
-#if NET8_0_OR_GREATER
+#if NET6_0_OR_GREATER
 #define WITH_INTEROPSERVICES_NATIVEMEMORY
 #endif
 
